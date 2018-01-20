@@ -1,5 +1,7 @@
 # Notes on https://elixir-lang.org/getting-started/case-cond-and-if.html
 
+import ExUnit.Assertions
+
 # case allows us to compare a value against many patterns until we find a matching one.
 
 t = {1, 2, 3}
@@ -8,7 +10,7 @@ r = case t do
   {1, x, y} -> "matched with #{x} and #{y}"
   _ -> "default matching any other value"
 end
-IO.puts(r == "matched with 2 and 3")
+assert r == "matched with 2 and 3"
 
 # lauses also allow extra conditions to be specified via when guards.
 
@@ -17,7 +19,7 @@ r = case t do
   {1, x, 3} when rem(x, 2) == 0 -> "matched even #{x}"
   _ -> "matched default"
 end
-IO.puts(r == "matched even 2")
+assert r == "matched even 2"
 
 # anonymous functions can also have multiple clauses and guards.
 
@@ -25,8 +27,8 @@ min = fn
   x, y when x < y -> x
   _, y -> y
 end
-IO.puts(min.(1, 2) == 1)
-IO.puts(min.(2, 1) == 1)
+assert min.(1, 2) == 1
+assert min.(2, 1) == 1
 
 # cond checks different conditions and find the first one that evaluates to true.
 
@@ -36,7 +38,7 @@ r = cond do
   1 + 1 == 2 -> "this one's true"
   1 * 1 == 1 -> "this one's also true"
 end
-IO.puts(r == "this one's true")
+assert r == "this one's true"
 
 # If the condition given to if/2 returns false or nil, the body given between
 # do/end is not executed and instead it returns nil. The opposite happens with
@@ -45,11 +47,11 @@ IO.puts(r == "this one's true")
 if nil do
   raise("this won't be seen")
 else
-  IO.puts(true)
+  assert true
 end
 
 unless 1 == 2 do
-  IO.puts(true)
+  assert true
 end
 
 # We can write if using Elixir’s regular syntax where each argument is separated
@@ -57,4 +59,4 @@ end
 # important role in the language and are quite common in many functions and macros.
 
 r = if false, do: :alpha, else: :beta
-IO.puts(r == :beta)
+assert r == :beta
