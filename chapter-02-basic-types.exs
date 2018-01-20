@@ -62,7 +62,7 @@ IO.puts(tl(xs) == [2, true, 3])
 # a charlist (literally a list of characters). Charlists are quite common when
 # interfacing with existing Erlang code. 
 
-IO.puts([116, 114, 117, 101])
+IO.puts([116, 114, 117, 101] == 'true')
 
 # Elixir uses curly brackets to define tuples. Tuples store elements contiguously
 # in memory. This means accessing a tuple element by index or getting the tuple
