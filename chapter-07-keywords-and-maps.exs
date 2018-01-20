@@ -37,6 +37,7 @@ assert k4[:a] == 0
 #     where: w.prcp > 0,
 #     where: w.temp < 20,
 #     select: w
+#
 
 # The following are all the same statement. In general, when the keyword list is
 # the last argument of a function, the square brackets are optional.
@@ -46,12 +47,60 @@ assert (if false, do: "foo", else: "bar") == "bar"
 assert if(false, [do: "foo", else: "bar"]) == "bar"
 assert if(false, [{:do, "foo"}, {:else, "bar"}]) == "bar"
 
+# Although we can pattern match on keyword lists, it is rarely done in practice
+# since pattern matching on lists requires the number and order of items to match.
+#
+#   iex> [a: a] = [a: 1]
+#   [a: 1]
+#   iex> [a: a] = [a: 1, b: 2]
+#   ** (MatchError) no match of right hand side value: [a: 1, b: 2]
+#   iex> [b: b, a: a] = [a: 1, b: 2]
+#   ** (MatchError) no match of right hand side value: [a: 1, b: 2]
+#
+
 # Keyword lists are used in Elixir mainly for passing optional values. If you
 # need to store many items (i.e. need better than linear performance of lists)
 # or guarantee one key associates with at most one-value, use maps instead.
 
-# Whenever you need a key-value store, maps are the “go to” data structure in Elixir.
+m1 = %{:a => 1, :b => 2}
+assert m1[:a] == 1
+assert m1[:b] == 2
 
-m = %{:a => 1, :b => 2}
-assert m[:a] == 1
-assert m[:b] == 2
+# Compared to keyword lists have these properties:
+#
+# * Maps allow any value as a key.
+# * Maps’ keys do not follow any ordering.
+#
+# You can use a variety of syntaxes/functions when working with maps,
+# particularly a special dot-field syntax when keys are atoms.
+
+m2 = %{:a => 1, :b => 2}
+m2 = Map.put(m2, :c, 3)
+m2 = Map.put(m2, :a, 4)
+m2 = %{m2 | :b => 6} # updates existing keys only
+assert m2[:a] == 4
+assert m2.b == 6
+assert Map.get(m2, :c) == 3
+
+# In contrast to keyword lists, maps are very useful with pattern matching.
+# When a map is used in a pattern, it's matched on a subset of the given value.
+
+%{1 => x} = %{1 => "foo", 2 => "bar"}
+assert x == "foo"
+
+# Often we will have maps inside maps, or even keywords lists inside maps, and
+# so forth. Elixir provides conveniences for manipulating nested data structures
+# via the put_in/2, update_in/2 and other macros giving the same conveniences
+# you would find in imperative languages while keeping the immutable properties
+# of the language. For more info, see <https://hexdocs.pm/elixir/Kernel.html>.
+
+users = [
+  john: %{name: "John", age: 27, languages: ["Erlang", "Ruby", "Elixir"]},
+  mary: %{name: "Mary", age: 29, languages: ["Elixir", "F#", "Clojure"]}
+]
+
+users = put_in users[:john].age, 31
+assert users[:john].age == 31
+
+users = update_in users[:mary].languages, fn languages -> List.delete(languages, "Clojure") end
+assert users[:mary].languages == ["Elixir", "F#"]
