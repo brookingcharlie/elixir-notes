@@ -16,3 +16,4 @@ Files:
 * [chapter-08-modules-and-functions.exs](chapter-08-modules-and-functions.exs)
 * [chapter-09-recursion.exs](chapter-09-recursion.exs)
 * [chapter-10-enumerables-and-streams.exs](chapter-10-enumerables-and-streams.exs)
+* [chapter-11-processes.exs](chapter-11-processes.exs)
