@@ -17,3 +17,4 @@ Files:
 * [chapter-09-recursion.exs](chapter-09-recursion.exs)
 * [chapter-10-enumerables-and-streams.exs](chapter-10-enumerables-and-streams.exs)
 * [chapter-11-processes.exs](chapter-11-processes.exs)
+* [chapter-12-io-and-the-file-system.exs](chapter-12-io-and-the-file-system.exs)
