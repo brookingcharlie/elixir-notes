@@ -15,3 +15,4 @@ Files:
 * [chapter-07-keywords-and-maps.exs](chapter-07-keywords-and-maps.exs)
 * [chapter-08-modules-and-functions.exs](chapter-08-modules-and-functions.exs)
 * [chapter-09-recursion.exs](chapter-09-recursion.exs)
+* [chapter-10-enumerables-and-streams.exs](chapter-10-enumerables-and-streams.exs)
