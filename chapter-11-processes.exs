@@ -94,3 +94,52 @@ Task.start fn -> raise "oops" end
 #     (stdlib) proc_lib.erl:247: :proc_lib.init_p_do_apply/3
 # Function: #Function<4.100873718/0 in :elixir_compiler_0.__FILE__/1>
 #     Args: []
+
+# If you are building an application that requires state, for example, to keep
+# your application configuration, or you need to parse a file and keep it in
+# memory, where would you store it?
+#
+# Processes are the most common answer to this question. We can write processes
+# that loop infinitely, maintain state, and send and receive messages. As an
+# example, let’s write a module that starts new processes that work as a
+# key-value store.
+
+defmodule KV do
+  def start_link do
+    Task.start_link(fn -> loop(%{}) end)
+  end
+
+  defp loop(map) do
+    receive do
+	  {:get, key, caller} ->
+	    send caller, Map.get(map, key)
+		loop(map)
+	  {:put, key, value} ->
+	    loop(Map.put(map, key, value))
+	end
+  end
+end
+
+# It's possible to register the pid, giving it a name, and allowing everyone that
+# knows the name to send it messages
+
+{:ok, pid} = KV.start_link()
+Process.register(pid, :kv)
+
+send :kv, {:put, :hello, "world"}
+send :kv, {:get, :hello, self()}
+msg = receive do m -> m after 100 -> "nothing in inbox" end
+
+assert msg == "world"
+
+# Using processes to maintain state and name registration are very common
+# patterns in Elixir applications. However, most of the time, we won’t implement
+# those patterns manually as above, but by using one of the many abstractions
+# that ship with Elixir. For example, Elixir provides agents, which are simple
+# abstractions around state.
+
+{:ok, pid} = Agent.start_link(fn -> %{} end)
+Agent.update(pid, fn map -> Map.put(map, :hello, :world) end)
+value = Agent.get(pid, fn map -> Map.get(map, :hello) end)
+
+assert value == :world
