@@ -14,3 +14,4 @@ Files:
 * [chapter-06-binaries-strings-and-char-lists.exs](chapter-06-binaries-strings-and-char-lists.exs)
 * [chapter-07-keywords-and-maps.exs](chapter-07-keywords-and-maps.exs)
 * [chapter-08-modules-and-functions.exs](chapter-08-modules-and-functions.exs)
+* [chapter-09-recursion.exs](chapter-09-recursion.exs)
